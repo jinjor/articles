@@ -3,7 +3,7 @@ title: Jest から Vitest に移行してみた
 emoji: "🚀"
 type: "tech"
 topics: ["Vitest"]
-publication_name: knowledgework
+# publication_name: knowledgework
 published: false
 ---
 
