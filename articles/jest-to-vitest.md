@@ -21,25 +21,24 @@ published: false
 
 移行中には色々右往左往しましたが、最終的には次のようになりました。
 
-依存から削除されたパッケージ:
+削除・追加されたパッケージ:
 
+```diff
 - @storybook/jest
 - @types/jest
 - jest
 - jest-css-modules
 - jest-environment-jsdom
++ @next/env
++ @storybook/test
++ @vitejs/plugin-react-swc
++ jsdom
++ node-fetch
++ vite-tsconfig-paths
++ vitest
+```
 
-依存に追加されたパッケージ:
-
-- @next/env
-- @storybook/test
-- @vitejs/plugin-react-swc
-- jsdom
-- node-fetch
-- vite-tsconfig-paths
-- vitest
-
-直接の依存の数だけ見ると増えていますが、pnpm-lock.yml は `682 additions / 1,109 deletions` という結果なのでだいぶ身軽になったと思います。
+直接の依存の数だけ見ると増えていますが、 pnpm-lock.yml の差分を見ると `682 additions / 1,109 deletions` という結果なのでだいぶ身軽になったと思います。
 
 ## 設定ファイルの更新
 
@@ -159,7 +158,7 @@ Vitest は Jest との互換性をかなり重視した作りになっており�
 
 少しだけ違うところは、`jest.requireActual` の代わりに `vi.importActual` を使い、非同期に動的インポートするあたりでしょうか。しかし、大した差分はなく機械的に置き換えられました。
 
-```diff
+```diff typescript
 - jest.mock('@/libs/react', () => ({
 -   ...jest.requireActual('@/libs/react'),
 -   useState: jest.fn(),
@@ -172,7 +171,7 @@ Vitest は Jest との互換性をかなり重視した作りになっており�
 
 ## scaffolding を更新
 
-ナレッジワークのフロントエンドでは [scaffdog](https://github.com/scaffdog/scaffdog) というライブラリを愛用してしているため（先日、なんと作者がジョインしています！🎉）、こちらも合わせて書き換えました。
+ナレッジワークのフロントエンドでは [scaffdog](https://github.com/scaffdog/scaffdog) というライブラリを愛用してしているため（なんと先日、作者がジョインしました 🎉）、こちらも合わせて書き換えました。
 
 # 速度比較
 
