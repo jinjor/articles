@@ -71,7 +71,7 @@ export default defineConfig({
 
 特筆すべき点は以下になります。
 
-- `plugin-react` の代わりに `plugin-react-swc` を使うことでトランスパイルを速くしています
+- `plugin-react` の代わりに `plugin-react-swc` を使うことで、Babel 部分のトランスパイルを高速化しています
 - 元々設定に使っていた `next/jest` をやめたため、`@next/env` を使って自前で環境変数をセットする必要が生じました
 - `vite-tsconfig-paths` を使って、インポートのエイリアス設定（`'@/...'`）を tsconfig.json から読み込んでいます
 - jsdom より happy-dom の方が高速という記事をいくつかみましたが、一部の動作に不具合があったため見送りました
