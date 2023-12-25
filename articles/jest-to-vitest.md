@@ -7,7 +7,7 @@ topics: ["Vitest"]
 published: false
 ---
 
-こんにちは。ナレッジワークの torii[^1] です。
+こんにちは。ナレッジワークの [torii](https://twitter.com/jinjor) です。
 7 月にフロントエンドエンジニアとして入社してもうすぐ半年、そろそろ技術記事の一つも書きたいなと思っていたところに、ちょうどいいネタを見つけたので投稿してみます！
 
 # Jest から Vitest に移行してみた
@@ -168,7 +168,7 @@ Vitest は Jest との互換性をかなり重視した作りになっており�
 
 ## scaffolding を更新
 
-ナレッジワークのフロントエンドでは [scaffdog](https://github.com/scaffdog/scaffdog) というライブラリを愛用してしているため、こちらも合わせて書き換えました。（ちなみに今月 scaffdog 作者の wadamaru[^2] がジョインしました 🎉 心強いです！）
+ナレッジワークのフロントエンドでは [scaffdog](https://github.com/scaffdog/scaffdog) というライブラリを愛用してしているため、こちらもあわせて書き換えました。（ちなみに今月 scaffdog 作者の [wadamaru](https://twitter.com/wadackel) がジョインしました 🎉 心強いです！）
 
 ## storybook/jest を storybook/jest に移行
 
@@ -217,9 +217,5 @@ Jest ではこの問題は起こりません。Jest と Vitest で挙動の差�
 
 Jest から Vitest へ無事に移行することができました。移行にかかった期間は調査やレビューを含めて足掛け 3 日ほどです。
 
-ナレッジワークのフロントエンドエンジニアは、ギルドというコミュニティ活動の中で技術的な知見を共有したり雑談・相談を積極的に行っており、今回の移行も「やりたいね、じゃあやりましょう」ですぐに始まり、レビューも沢山もらうことができました。特に今回は設定周りで yukita[^3] の助けを大いに借りました。ありがとうございます！）。
+ナレッジワークのフロントエンドエンジニアは、ギルドというコミュニティ活動の中で技術的な知見を共有したり雑談・相談を積極的に行っており、今回の移行も「やりたいね、じゃあやりましょう」ですぐに始まり、レビューも沢山もらうことができました。特に今回は設定周りで [yukita](https://twitter.com/_otofu_square_) の助けを大いに借りました。ありがとうございます！）。
 現在[エンジニア積極採用中](https://kwork.studio/recruit-engineer)ですので、気になる方はカジュアル面談でぜひお会いしましょう！
-
-[^1]: https://twitter.com/jinjor
-[^2]: https://twitter.com/wadackel
-[^3]: https://twitter.com/_otofu_square_
