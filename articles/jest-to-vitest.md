@@ -138,7 +138,7 @@ afterEach(() => mswServer.resetHandlers());
 afterAll(() => mswServer.close());
 ```
 
-[MSW (Mock Service Worker)](https://github.com/mswjs/msw) の設定です。API からのレスポンスを差し替えられます。便利ですね。
+[MSW (Mock Service Worker)](https://github.com/mswjs/msw) の設定です。API からのレスポンスを差し替えられます。便利ですね！（このコードだけでは完結しないため、公式ドキュメントの[記載](https://vitest.dev/guide/mocking.html#requests)も参考にしてください）
 
 ## 関数の更新
 
