@@ -12,9 +12,9 @@ published: false
 
 # Jest から Vitest に移行してみた
 
-では早速やったことですが、フロントエンドのテストフレームワークを [Jest](https://jestjs.io/) から [Vitest](https://vitest.dev/) に移行しました。理由としては、Jest が CJS を前提として動作しており、ESM 前提のモジュールを動かすのに一手間も二手間もかかるからです。
+早速やったことですが、フロントエンドのテストフレームワークを [Jest](https://jestjs.io/) から [Vitest](https://vitest.dev/) に移行しました。理由としては、Jest が CJS を前提として動作しており、ESM 前提のモジュールを動かすのに一手間も二手間もかかるからです。
 
-ナレッジワークのフロントエンドは Next.js を採用していることもあり、テストフレームワークに Jest を採用していました。関数単位のテストや UI コンポーネントのテストを書く分には問題なかったのですが、それより上のレイヤーになるとたちまち ESM 互換性の問題を踏み、テストを書こうにも腰の重い状態が続いていました。そんな時、とあるページでバグが頻発した対策として重点的にテストを書くことになり、この際シュッと Vitest に移行してしまおうということになりました。Vitest は最近 v1.0.0 がリリースされたこともあり、移行するには絶好のタイミングです。
+ナレッジワークのフロントエンドは Next.js を採用していることもあり、テストフレームワークに Jest を採用していました。関数単位のテストや UI コンポーネントのテストを書く分には問題なかったのですが、それより上層（ページなど）になるとたちまち ESM 互換性の問題を踏み、テストを書こうにも腰の重い状態が続いていました。そんな時、とあるページでバグが頻発した対策として重点的にテストを書くことになり、この際シュッと Vitest に移行してしまおうということになりました。Vitest は最近 v1.0.0 がリリースされたこともあり、移行するには絶好のタイミングです。
 
 # 移行作業の詳細
 
@@ -120,8 +120,7 @@ beforeAll(() => {
 });
 ```
 
-jsdom で定義されていないメソッドやグローバルな値を差し込んでいます。
-ここは Vitest に移行する前からあったコードをそのまま利用しています。
+jsdom で定義されていないメソッドやグローバルな値を差し込んでいます。ここは Vitest に移行する前からあったコードをそのまま利用しています。
 
 ```typescript:vitest.setup.mts
 // undici fetch が hang するので node-fetch に差し替える
@@ -130,8 +129,7 @@ jsdom で定義されていないメソッドやグローバルな値を差し�
 Object.assign(window, { fetch, Response, Request });
 ```
 
-テスト終了後にプロセスが終了しない問題がしばしば起こったため、その対策です。
-[Issue](https://github.com/vitest-dev/vitest/issues/3077) によると、Node.js の fetch 実装 (undich) に問題がありそうとのことで、 `node-fetch` に差し替えています。
+テスト終了後にプロセスが終了しない問題がしばしば起こったため、その対策をしています。[Issue](https://github.com/vitest-dev/vitest/issues/3077) によると、Node.js の fetch 実装 (undich) に問題がありそうとのことで、 `node-fetch` に差し替えています。
 
 ```typescript:vitest.setup.mts
 // Setup MSW
@@ -140,8 +138,7 @@ afterEach(() => mswServer.resetHandlers());
 afterAll(() => mswServer.close());
 ```
 
-[MSW (Mock Service Worker)](https://github.com/mswjs/msw) の設定です。
-API へのリクエストを差し替えられます。便利ですね。
+[MSW (Mock Service Worker)](https://github.com/mswjs/msw) の設定です。API へのリクエストを差し替えられます。便利ですね。
 
 ## 関数の更新
 
@@ -218,4 +215,4 @@ Jest ではこの問題は起こりません。Jest と Vitest で挙動の差�
 Jest から Vitest へ無事に移行することができました。移行にかかった期間は調査やレビューを含めて足掛け 3 日ほどです。
 
 ナレッジワークのフロントエンドエンジニアは、ギルドというコミュニティ活動の中で技術的な知見を共有したり雑談・相談を積極的に行っており、今回の移行も「やりたいね、じゃあやりましょう」ですぐに始まり、レビューも沢山もらうことができました。特に今回は設定周りで [yukita](https://twitter.com/_otofu_square_) の助けを大いに借りました。ありがとうございます！）。
-現在[エンジニア積極採用中](https://kwork.studio/recruit-engineer)ですので、気になる方はカジュアル面談でぜひお会いしましょう！
+現在[エンジニア積極採用中](https://kwork.studio/recruit-engineer)ですので、気になった方は是非カジュアル面談でお会いしましょう！
