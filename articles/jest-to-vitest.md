@@ -1,5 +1,5 @@
 ---
-title: ナレッジワークのテスト基盤を Jest から Vitest に移行した話
+title: フロントエンドのテスト基盤を Jest から Vitest に移行した話
 emoji: "🚀"
 type: "tech"
 topics: ["Vitest"]
