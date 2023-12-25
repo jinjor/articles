@@ -7,7 +7,7 @@ topics: ["Vitest"]
 published: false
 ---
 
-こんにちは。torii@ナレッジワークです。
+こんにちは。ナレッジワークの torii[^1] です。
 7 月にフロントエンドエンジニアとして入社してもうすぐ半年、そろそろ技術記事の一つも書きたいなと思っていたところに、ちょうどいいネタを見つけたので投稿してみます！
 
 # Jest から Vitest に移行してみた
@@ -46,9 +46,7 @@ published: false
 Jest の設定を Vitest 用に書き換えました。
 コメントを省くと、ざっと以下のようになりました。
 
-vitest.config.mts
-
-```typescript
+```typescript:vitest.config.mts
 import nextEnv from "@next/env";
 import react from "@vitejs/plugin-react-swc";
 import tsconfigPaths from "vite-tsconfig-paths";
@@ -84,9 +82,7 @@ export default defineConfig({
 
 ここは長くなるため、ファイルの中身をいくつかに分割して説明していきます。
 
-vitest.setup.mts
-
-```typescript
+```typescript:vitest.setup.mts
 import "@testing-library/jest-dom/vitest";
 import { loadEnvConfig } from "@next/env";
 import { configure } from "@testing-library/react";
@@ -105,7 +101,7 @@ configure({
 - 設定ファイルと同じく、`@next/env` を使って環境変数を読み込んでいます
 - `testIdAttribute` は `getByTestId()` で要素を取得する時の命名規則の設定です
 
-```typescript
+```typescript:vitest.setup.mts
 /** @see https://github.com/jsdom/jsdom/issues/1695 */
 Element.prototype.scrollIntoView = vi.fn();
 Element.prototype.scrollBy = vi.fn().mockReturnValue(undefined);
@@ -127,7 +123,7 @@ beforeAll(() => {
 jsdom で定義されていないメソッドやグローバルな値を差し込んでいます。
 ここは Vitest に移行する前からあったコードをそのまま利用しています。
 
-```typescript
+```typescript:vitest.setup.mts
 // undici fetch が hang するので node-fetch に差し替える
 // https://github.com/vitest-dev/vitest/issues/3077
 // https://github.com/nodejs/undici/issues/2026
@@ -137,7 +133,7 @@ Object.assign(window, { fetch, Response, Request });
 テスト終了後にプロセスが終了しない問題がしばしば起こったため、その対策です。
 [Issue](https://github.com/vitest-dev/vitest/issues/3077) によると、Node.js の fetch 実装 (undich) に問題がありそうとのことで、 `node-fetch` に差し替えています。
 
-```typescript
+```typescript:vitest.setup.mts
 // Setup MSW
 beforeAll(() => mswServer.listen());
 afterEach(() => mswServer.resetHandlers());
@@ -172,7 +168,7 @@ Vitest は Jest との互換性をかなり重視した作りになっており�
 
 ## scaffolding を更新
 
-ナレッジワークのフロントエンドでは [scaffdog](https://github.com/scaffdog/scaffdog) というライブラリを愛用してしているため、こちらも合わせて書き換えました。（ちなみに今月 scaffdog の作者がジョインしました 🎉 心強いです！）
+ナレッジワークのフロントエンドでは [scaffdog](https://github.com/scaffdog/scaffdog) というライブラリを愛用してしているため、こちらも合わせて書き換えました。（ちなみに今月 scaffdog 作者の wadamaru[^2] がジョインしました 🎉 心強いです！）
 
 ## storybook/jest を storybook/jest に移行
 
@@ -221,5 +217,9 @@ Jest ではこの問題は起こりません。Jest と Vitest で挙動の差�
 
 Jest から Vitest へ無事に移行することができました。移行にかかった期間は調査やレビューを含めて足掛け 3 日ほどです。
 
-ナレッジワークのフロントエンドエンジニアは、ギルドというコミュニティ活動の中で技術的な知見を共有したり雑談・相談を積極的に行っており、今回の移行も「やりたいね、じゃあやりましょう」ですぐに始まり、レビューも沢山もらうことができました。技術的に尖ったメンバーが多数在籍しているので、常に刺激をもらったり与えたりできる環境になっています。
-ナレッジワークは現在[エンジニア積極採用中](https://kwork.studio/recruit-engineer)ですので、気になる方はカジュアル面談でぜひお会いしましょう！
+ナレッジワークのフロントエンドエンジニアは、ギルドというコミュニティ活動の中で技術的な知見を共有したり雑談・相談を積極的に行っており、今回の移行も「やりたいね、じゃあやりましょう」ですぐに始まり、レビューも沢山もらうことができました。特に今回は設定周りで yukita[^3] の助けを大いに借りました。ありがとうございます！）。
+現在[エンジニア積極採用中](https://kwork.studio/recruit-engineer)ですので、気になる方はカジュアル面談でぜひお会いしましょう！
+
+[^1]: https://twitter.com/jinjor
+[^2]: https://twitter.com/wadackel
+[^3]: https://twitter.com/_otofu_square_
