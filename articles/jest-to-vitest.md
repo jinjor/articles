@@ -169,7 +169,7 @@ Vitest は Jest との互換性をかなり重視した作りになっており�
 
 ## storybook/jest を storybook/jest に移行
 
-時を同じくして [Storybook 7.6 がリリース](https://storybook.js.org/blog/storybook-7-6/)されました。
+今回の移行と時を同じくして [Storybook 7.6 がリリース](https://storybook.js.org/blog/storybook-7-6/)されました。
 このリリースにより、`@storybook/test` がそれまでの Jest から Vitest を使うように変更されたため、こちらも一緒に移行しました。
 
 # トレードオフ
