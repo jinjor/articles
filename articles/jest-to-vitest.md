@@ -1,6 +1,6 @@
 ---
 title: フロントエンドのテスト基盤を Jest から Vitest に移行した話
-emoji: "🚀"
+emoji: "⚡️"
 type: "tech"
 topics: ["Vitest"]
 # publication_name: knowledgework
