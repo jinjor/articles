@@ -188,7 +188,7 @@ Vitest は Vite プロジェクトでの使用を想定していますが、 Nex
 
 しかし、現状の CI のボトルネックがそこではない（※）ことや、まだ CI の最適化の余地があることなどを勘案した結果、全体の判断としては Vitest に乗っておいた方が良いだろうという結論に至りました。
 
-※ VRT (= Visual Reguression Test) の方が遅い
+※ VRT (= Visual Regression Test) の方が遅い
 
 ## その他
 
