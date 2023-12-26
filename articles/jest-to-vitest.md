@@ -14,7 +14,7 @@ published: false
 
 早速やったことですが、フロントエンドのテストフレームワークを [Jest](https://jestjs.io/) から [Vitest](https://vitest.dev/) に移行しました。理由としては、Jest が CJS を前提として動作しており、ESM 前提のモジュールを動かすのに一手間も二手間もかかるからです。
 
-ナレッジワークのフロントエンドは Next.js を採用しており、テストフレームワークには Next.js と相性の良い Jest を採用していました。関数単位のテストや UI コンポーネントのテストを書く分には問題なかったのですが、それより上層（ページなど）になるとたちまち ESM 互換性の問題を踏み、テストを書こうにも腰の重い状態が続いていました。そんな時、バグが頻発していたとあるページのテストを重点的に書くことになり、この際シュッと Vitest に移行してしまおうということになりました。Vitest は最近 v1.0.0 がリリースされたこともあり、移行するには絶好のタイミングです。
+ナレッジワークのフロントエンドは Next.js を採用しており、テストフレームワークには Next.js と相性の良い Jest を採用していました。関数単位のテストや UI コンポーネントのテストを書く分には問題なかったのですが、それより上層（ページなど）になるとたちまち ESM 互換性の問題を踏み、テストを書こうにも腰の重い状態が続いていました。そんな時、とある機能でページ単位のテストを重点的に書く必要性が生まれ、この際シュッと Vitest に移行してしまおうということになりました。Vitest は最近 v1.0.0 がリリースされたこともあり、移行するには絶好のタイミングです。
 
 # 移行作業の詳細
 
@@ -22,7 +22,7 @@ published: false
 
 ## 依存の更新
 
-色々右往左往した結果、最終的に追加・削除されたパッケージ次のようになりました。
+色々右往左往した結果、最終的に追加・削除されたパッケージは次のようになりました。
 
 ```diff
 - @storybook/jest
@@ -34,7 +34,6 @@ published: false
 + @storybook/test
 + @vitejs/plugin-react-swc
 + jsdom
-+ node-fetch
 + vite-tsconfig-paths
 + vitest
 ```
@@ -74,9 +73,12 @@ export default defineConfig({
 - `plugin-react` の代わりに `plugin-react-swc` を使うことで、Babel 部分のトランスパイルを高速化しています
 - 元々設定に使っていた `next/jest` をやめたため、`@next/env` を使って自前で環境変数をセットする必要が生じました
 - `vite-tsconfig-paths` を使って、インポートのエイリアス設定（`'@/...'`）を tsconfig.json から読み込んでいます
+- Vitest はデフォルトで `describe` や `test` といった global 変数がデフォルトでは使えないため `globals` を `true` に設定しました
+  - これに加えて、tsconfig.json に `"types": ["vitest/globals"]` を追記しています
 - jsdom より happy-dom の方が高速という記事をいくつかみましたが、一部の動作に不具合があったため見送りました
+  - 例: https://github.com/capricorn86/happy-dom/issues/1135
 - `testTransformMode` は Vitest 0.33 -> 0.34 で起きたパフォーマンス劣化（[Issue](https://github.com/vitest-dev/vitest/issues/3967)）の対策です
-- `reporters` の `"hanging-process"` は後述するハング対策の時にデバッグのために追加しました
+- `reporters` の `"hanging-process"` は、まれにテスト終了時にプロセスが終了しないことが起きたためデバッグのために追加しました
 
 ## セットアップファイルの更新
 
@@ -86,7 +88,6 @@ export default defineConfig({
 import "@testing-library/jest-dom/vitest";
 import { loadEnvConfig } from "@next/env";
 import { configure } from "@testing-library/react";
-import fetch, { Request, Response } from "node-fetch";
 
 import { mswServer } from "@/libs/msw/mswServer";
 
@@ -121,15 +122,6 @@ beforeAll(() => {
 ```
 
 jsdom で定義されていないメソッドやグローバルな値を差し込んでいます。ここは Vitest に移行する前からあったコードをそのまま利用しています。
-
-```typescript:vitest.setup.mts
-// undici fetch が hang するので node-fetch に差し替える
-// https://github.com/vitest-dev/vitest/issues/3077
-// https://github.com/nodejs/undici/issues/2026
-Object.assign(window, { fetch, Response, Request });
-```
-
-テスト終了後にプロセスが終了しない問題がしばしば起こったため、その対策をしています。[Issue](https://github.com/vitest-dev/vitest/issues/3077) によると、Node.js の fetch 実装 (undich) に問題がありそうとのことで、 `node-fetch` に差し替えています。
 
 ```typescript:vitest.setup.mts
 // Setup MSW
@@ -176,15 +168,15 @@ Vitest は Jest との互換性をかなり重視した作りになっており�
 
 Vitest への移行に際して、以下に挙げるようにいくつかのトレードオフがありました。
 
-## トランスパイラの違い
+## トランスパイル実装の違い
 
-Vitest は Vite プロジェクトでの使用を想定していますが、 Next.js のプロジェクトでも問題なく使用できます。しかし Next.js と Vite ではコードのトランスパイル結果が違うことには留意する必要があるでしょう。Next.js はトランスパイラとして babel を使用し、 Vite はトランスパイラとして esbuild を使用するため、厳密に本番で使用されるコードをテストすることができません。
+Vitest は Vite プロジェクトでの使用を想定していますが、 Next.js のプロジェクトでも問題なく使用できます。しかし Next.js と Vite ではコードのトランスパイル結果が違うことには留意する必要があるでしょう。Next.js は SWC を使用し、 Vite は esbuild を使用してコードをトランスパイルするため、厳密に本番で使用されるコードをテストすることができません。
 
 しかし、今回は微妙な差異を気にするよりもそもそテストが書けないという問題を解決するメリットが大きかったため、無視することにしました。
 
 ## 速度
 
-ローカル実行は Jest と Vitest で体感できるほどの差がありませんでしたが、 CI (GitHub Actions) 上での実行は約 1.5 倍の時間がかかるようになってしまいました。もちろん実行環境やコードベースなどの条件によるので一概に Vitest の方が遅いとは言えませんが、ちょっと残念な結果ですね。
+ローカル実行は Jest と Vitest で体感できるほどの差がありませんでしたが、 CI (GitHub Actions) 上での実行は約 1.5 倍の時間がかかるようになってしまいました。高速化したという声も多いので実行環境やコードベースなどの条件にもよるのだと思いますが、今のところ原因はわからず。ちょっと残念な結果です。
 
 しかし、現状の CI のボトルネックがそこではない（※）ことや、まだ CI の最適化の余地があることなどを勘案した結果、全体の判断としては Vitest に乗っておいた方が良いだろうという結論に至りました。
 
