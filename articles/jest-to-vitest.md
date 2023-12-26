@@ -75,7 +75,7 @@ export default defineConfig({
 - `vite-tsconfig-paths` を使って、インポートのエイリアス設定（`'@/...'`）を tsconfig.json から読み込んでいます
 - Vitest はデフォルトで `describe` や `test` といった global 変数がデフォルトでは使えないため `globals` を `true` に設定しました
   - これに加えて、tsconfig.json に `"types": ["vitest/globals"]` を追記しています
-- jsdom より happy-dom の方が高速という記事をいくつかみましたが、一部の動作に不具合（[例](https://github.com/capricorn86/happy-dom/issues/1135)）があったため見送りました
+- jsdom より happy-dom の方が高速という記事をいくつか見ましたが、一部の動作に不具合（[例](https://github.com/capricorn86/happy-dom/issues/1135)）があったため見送りました
 - `testTransformMode` は Vitest 0.33 -> 0.34 で起きたパフォーマンス劣化（[Issue](https://github.com/vitest-dev/vitest/issues/3967)）の対策です
 - `reporters` の `"hanging-process"` は、まれにテスト終了時にプロセスが終了しないことが起きたためデバッグのために追加しました
 
