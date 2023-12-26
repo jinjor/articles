@@ -3,7 +3,7 @@ title: フロントエンドのテスト基盤を Jest から Vitest に移行�
 emoji: "✅"
 type: "tech"
 topics: ["Vitest"]
-# publication_name: knowledgework
+publication_name: knowledgework
 published: false
 ---
 
