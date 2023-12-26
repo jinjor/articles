@@ -158,7 +158,7 @@ Vitest は Jest との互換性をかなり重視した作りになっており�
 
 ナレッジワークのフロントエンドでは [scaffdog](https://github.com/scaffdog/scaffdog) というライブラリを愛用してしているため、こちらもあわせて書き換えました。（ちなみに今月 scaffdog 作者の [wadamaru](https://twitter.com/wadackel) がジョインしました 🎉 心強いです！）
 
-## storybook/jest を storybook/jest に移行
+## storybook/jest を storybook/test に移行
 
 今回の移行と時を同じくして [Storybook 7.6 がリリース](https://storybook.js.org/blog/storybook-7-6/)されました。
 このリリースにより、`@storybook/test` がそれまでの Jest から Vitest を使うように変更されたため、こちらも一緒に移行しました。
