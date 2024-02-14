@@ -43,8 +43,8 @@ PNG バイナリは、先頭に PNG であることを示す８バイトの識�
 <img alt="PNG フォーマットの構造" src="read-png-file/structure.png" width="250px">
 <img alt="チャンク共通の構造" src="read-png-file/chunk.png" width="250px">
 
-![PNG フォーマットの構造](read-png-file/structure.png =250x)
-![チャンク共通の構造](read-png-file/chunk.png =250x)
+![PNG フォーマットの構造](./read-png-file/structure.png =250x)
+![チャンク共通の構造](./read-png-file/chunk.png =250x)
 
 チャンクの中でまず重要なのが IHDR （画像ヘッダ）と呼ばれるチャンクです。
 IHDR チャンクは設置が必須であり、画像のサイズやカラータイプ、インターレースの有無といった主要な情報が格納されています。
