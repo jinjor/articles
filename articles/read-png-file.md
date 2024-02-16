@@ -7,8 +7,6 @@ publication_name: knowledgework
 published: false
 ---
 
-※ 全体的に WIP
-
 こんにちは。ナレッジワークの [torii](https://twitter.com/jinjor) です。
 社内の LT 大会で「PNG を読んでみた」という内容の登壇をしたので、その内容をブログでも簡単に紹介したいと思います！
 
