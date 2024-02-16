@@ -30,8 +30,6 @@ Encraft Share Day は、より多くのメンバーに発表の場を提供す�
 
 **[登壇資料（Google スライド）](https://docs.google.com/presentation/d/1Td5uimvqOgKsjlVul7rGGBGiLh6GXTbB/edit?usp=sharing&ouid=117952936320809811148&rtpof=true&sd=true)**
 
-@[card](https://docs.google.com/presentation/d/1Td5uimvqOgKsjlVul7rGGBGiLh6GXTbB/edit?usp=sharing&ouid=117952936320809811148&rtpof=true&sd=true)
-
 ## お題
 
 iPhone で撮影したハンバーガーの写真です。
@@ -42,11 +40,8 @@ iPhone で撮影したハンバーガーの写真です。
 PNG バイナリは、先頭に PNG であることを示す８バイトの識別子があり、その後はチャンクと呼ばれるデータのまとまりが最後まで連なる構造になっています。
 各チャンクは、長さ・種別・データ・CRC という共通の構造から成り、チャンクの種別によってデータの内容が変わります。
 
-<img alt="PNG フォーマットの構造" src="../images/read-png-file/structure.png" width="400px">
-<img alt="チャンク共通の構造" src="../images/read-png-file/chunk.png" width="400px">
-
-![PNG フォーマットの構造](/images/read-png-file/structure.png =400x)
-![チャンク共通の構造](/images/read-png-file/chunk.png =400x)
+![PNG フォーマットの構造](/images/read-png-file/structure.png)
+![チャンク共通の構造](/images/read-png-file/chunk.png)
 
 チャンクの中でまず重要なのが IHDR （画像ヘッダ）と呼ばれるチャンクです。
 IHDR チャンクは設置が必須であり、画像のサイズやカラータイプ、インターレースの有無といった主要な情報が格納されています。
@@ -115,11 +110,8 @@ iTXt チャンクは、 tEXt チャンクの国際化（international）版で�
 
 ここからはいよいよ画像データの本体（ピクセルデータ）を読むために仕様をさらっていきます。
 
-<img alt="IDAT チャンクの構造" src="../images/read-png-file/idat.png" width="400px">
-<img alt="フィルタ済みデータの構造" src="../images/read-png-file/filtered-image.png" width="400px">
-
-![IDAT チャンクの構造](/images/read-png-file/idat.png =400x)
-![フィルタ済みデータの構造](/images/read-png-file/filtered-image.png =400x)
+![IDAT チャンクの構造](/images/read-png-file/idat.png)
+![フィルタ済みデータの構造](/images/read-png-file/filtered-image.png)
 
 IDAT チャンクには zlib 圧縮された画像データが入っています。
 ただし、この zlib 圧縮されている画像データは圧縮効率を高めるために事前にフィルタ処理を加えたものになります。
@@ -140,9 +132,7 @@ IDAT チャンクには zlib 圧縮された画像データが入っています
 
 具体例として、フィルタ種別１（Sub）の場合「左隣のピクセル値との差分を取る」操作をその行の全てのピクセルについて行います。
 
-<img alt="フィルタタイプ１" src="../images/read-png-file/filter1.png" width="400px">
-
-![フィルタタイプ１](/images/read-png-file/filter1.png =400x)
+![フィルタタイプ１](/images/read-png-file/filter1.png)
 
 （補足：値はバイトの範囲に収まるように 256 の剰余を計算します）
 
@@ -152,8 +142,7 @@ IDAT チャンクには zlib 圧縮された画像データが入っています
 
 以上の知識でいよいよ画像データ本体が読めるようになったので、デモ用のページに描画してみました。
 
-<img alt="同期で読む" src="../images/read-png-file/demo-sync.gif" width="400px">
-![同期で読む](/images/read-png-file/demo-sync.gif =400x)
+![同期で読む](/images/read-png-file/demo-sync.gif)
 
 左上の画像が `<img>` 要素で普通に描画した見本画像で、右が自前でパースしたものを `<canvas>` 要素に 1px ずつ描画したものです。
 見ての通り、同じ画像が描画できています。
@@ -161,8 +150,7 @@ IDAT チャンクには zlib 圧縮された画像データが入っています
 しかし、初期バージョンでは画像の「フェッチ -> パース -> 描画」を全て直列で実行していたため、描画されるまでに空白の状態で待たなければなりませんでした。
 そこで、「フェッチ -> パース -> 描画」を全て並行にストリーミングで処理できるバージョンを実装しました。結果、画像が読み込んだ部分から（上から）順に描画されるようになり、先ほどよりも少し体験が改善しました。
 
-<img alt="ストリームで読む" src="../images/read-png-file/demo-stream.gif" width="400px">
-![ストリームで読む](/images/read-png-file/demo-stream.gif =400x)
+![ストリームで読む](/images/read-png-file/demo-stream.gif)
 
 ここまでで、お題の画像を無事読み込めたことで仕様を正しく理解できたことが確認できました。
 ここからは、実装の過程で気になったことを検証していきます。
@@ -175,9 +163,7 @@ PNG 画像はインターレース方式でエンコードすることもでき�
 PNG のインターレースでは Adam7 というアルゴリズムが使われます。
 Adam7 では、以下のようにピクセル全体を 8x8 の領域に分割し 1〜7 の番号を振ります。
 
-<img alt="Adam7" src="../images/read-png-file/adam7.png" width="400px">
-
-![Adam7](/images/read-png-file/adam7.png =400x)
+![Adam7](/images/read-png-file/adam7.png)
 
 そして、１のみを集めて作った画像、2 のみを集めて作った画像、...、の順番に画像を並べます。
 こうすることで、読み込み時に低解像度の画像をまず描画し、徐々に解像度を上げながら表示することが可能になります。
@@ -186,18 +172,14 @@ Adam7 では、以下のようにピクセル全体を 8x8 の領域に分割し
 先ほどの画像をインターレースありの画像に変換して描画すると次のように表示されました。
 読み込みを開始してすぐに全体が把握できるようになっています（画像のサイズにもよりますが、今回の画像では粗さは気になりませんでした。）
 
-<img alt="インターレースで読む" src="../images/read-png-file/demo-interlace.gif" width="400px">
-
-![インターレースで読む](/images/read-png-file/demo-interlace.gif =400x)
+![インターレースで読む](/images/read-png-file/demo-interlace.gif)
 
 ## 検証２：フィルタの効果
 
 「事前にフィルタ処理をかけることで本当に圧縮率が高まっているのか」も気になったので、調べてみました。
 検証方法としては、元の画像を復元した後、再び type 1 から 4 のフィルタをかけて圧縮し直してサイズを比較しています（全行で同じフィルタをかけています）
 
-<img alt="フィルタの比較" src="../images/read-png-file/filter-comparison.png" width="400px">
-
-![フィルタの比較](/images/read-png-file/filter-comparison.png =400x)
+![フィルタの比較](/images/read-png-file/filter-comparison.png)
 
 結果は図の通り、何らかのフィルタをかけた方が圧縮後のサイズが小さくなるということがわかりました。
 他の画像でも結果は似たり寄ったりでしたが、唯一、コンソール画面のスクリーンショットだけはフィルタをかけた方が逆に圧縮後のサイズが大きくなってしまいました。原因は追っていませんが、ほとんどが黒のベタ塗りという画像の特性によるものと推察されます。この辺は深掘りしていくと面白そうですね。
@@ -207,9 +189,7 @@ Adam7 では、以下のようにピクセル全体を 8x8 の領域に分割し
 上の方で述べた通り、 eXIf チャンクや iTXt チャンクにはユーザーのプライバシーに関わる情報が多数格納されていました。
 そこで、著名なサービスをいくつかピックアップしてアップロードした画像のメタデータがどのように変わっているかを調べてみました。
 
-<img alt="サービスの比較" src="../images/read-png-file/service-comparison.png" width="400px">
-
-![サービスの比較](/images/read-png-file/service-comparison.png =400x)
+![サービスの比較](/images/read-png-file/service-comparison.png)
 
 今回調査した全てサービスで、プライバシーに関わるメタデータは削除されていることがわかりました。
 弊社サービスでも削除されていることが確認できたので安心しました。
