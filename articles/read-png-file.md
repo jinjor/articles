@@ -26,7 +26,7 @@ https://knowledgework.connpass.com/event/309925/
 前置きが長くなりましたが、ここからは簡単に発表した内容をこの記事でも説明します。
 （この発表では PNG の技術の概要を示してはいますが、実際にパースするのに必要な情報を完全には網羅していないため詳細は他の記事も参照していただければと思います。）
 
-**[登壇資料（Google スライド）](https://docs.google.com/presentation/d/1_Kg7C1qZWTp_AASDekr9Y8ndqNwQfvbbVII39Hn1Ie0/edit?usp=sharing)**
+**[登壇資料（Google スライド）](https://docs.google.com/presentation/d/1_Kg7C1qZWTp_AASDekr9Y8ndqNwQfvbbVII39Hn1Ie0/edit?usp=sharing#)**
 
 ## お題
 
