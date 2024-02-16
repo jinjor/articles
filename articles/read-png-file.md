@@ -30,6 +30,8 @@ Encraft Share Day は、より多くのメンバーに発表の場を提供す�
 
 ## お題
 
+![ハンバーガー](/images/read-png-file/hamburger.png)
+
 iPhone で撮影したハンバーガーの写真です。
 これを自前の実装でパースして中身を読んでみました。
 
