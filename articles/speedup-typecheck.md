@@ -35,7 +35,7 @@ https://zenn.dev/forcia_tech/articles/20231017_tsuji
 tsc --generateTrace /path/to/trace --incremental false
 ```
 
-上記のコマンドにより、/path/to/trace ディレクトリに trace.json, types.json という２つの JSON ファイルが出力されます。ここで Chrome ブラウザで `chrome://tracing` にアクセスし、上記のうちの trace.json を読み込むと実行時間のグラフが表示されます。
+上記のコマンドにより、/path/to/trace ディレクトリに trace.json, types.json という 2 つの JSON ファイルが出力されます。ここで Chrome ブラウザで `chrome://tracing` にアクセスし、上記のうちの trace.json を読み込むと実行時間のグラフが表示されます。
 
 以下は、今回の改善で実際に tsc が出力した実行結果のグラフです。
 
@@ -47,7 +47,7 @@ tsc --generateTrace /path/to/trace --incremental false
 
 # 改善方法
 
-ここで、特に時間のかかっている４つの部分に注目することにしました。（着手順に番号を振ったため右から順番になっていますがご容赦ください）
+ここで、特に時間のかかっている 4 つの部分に注目することにしました。（着手順に番号を振ったため右から順番になっていますがご容赦ください）
 
 1. ts-proto により自動生成された validate.ts: 14% (7 秒)
 2. 自前で自動生成している MSW handler: 4% (2 秒)
