@@ -39,7 +39,7 @@ tsc --generateTrace /path/to/trace --incremental false
 
 以下は、今回の改善で実際に tsc が出力した実行結果のグラフです。
 
-![tscトレース](/images/speedup-tsc/tsc-trace.png)
+![tscトレース](/images/speedup-typecheck/tsc-trace.png)
 
 全体は大きく createProgram, bindSourceFile, checkSourceFile という３つのステップから構成されており、このうち最も長く時間をとっている checkSourceFile （黄色い帯）が型検査を行なっている部分になります。どうやら純粋に型検査だけで 30 秒ほどかかっているようです。また、 checkSourceFile と書かれた１つの帯が１ファイル分の処理を表しており、フォーカスすると遅くなっているファイルがどれなのかをすぐに確認できます。便利ですね。
 
