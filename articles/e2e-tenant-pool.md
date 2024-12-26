@@ -39,7 +39,7 @@ published: false
 
 最終的に、「テナントプール」という仕組みを考案して実装することにしました。
 
-![テナントプールの仕組み](/images/e2e-tenant-pool/filter-comparison.png)
+![テナントプールの仕組み](/images/e2e-tenant-pool/tenant-pool.png)
 
 仕組みはざっくり以下の通りです。
 
