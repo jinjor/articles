@@ -4,7 +4,7 @@ emoji: "▶️"
 type: "tech"
 topics: ["Playwright"]
 publication_name: knowledgework
-published: false
+published: true
 ---
 
 こんにちは。ナレッジワークの [torii](https://twitter.com/jinjor) です。
