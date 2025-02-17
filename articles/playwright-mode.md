@@ -118,9 +118,16 @@ parallel の親は parallel でなくてはなりません。
 
 mode はすべて default です。
 
+beforeAll で失敗
 ![fail at beforeAll](/images/playwright-mode/fail-before-all.png)
+
+afterAll で失敗
 ![fail at afterAll](/images/playwright-mode/fail-after-all.png)
+
+beforeEach で失敗
 ![fail at beforeEach](/images/playwright-mode/fail-before-each.png)
+
+afterEach で失敗
 ![fail at afterEach](/images/playwright-mode/fail-after-each.png)
 
 afterAll で失敗した時に何故 test3 が再実行されるのかは分かりません。
