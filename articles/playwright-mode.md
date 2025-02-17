@@ -113,7 +113,8 @@ parallel の親は parallel でなくてはなりません。
 
 場所を取るので折りたたみますが、 test 以外で落ちた場合の挙動も調べて見ました
 
-::: beforeAll, afterAll, beforeEach, afterEach で失敗した時の挙動
+<details>
+<summary>beforeAll, afterAll, beforeEach, afterEach で失敗した時の挙動</summary>
 
 mode はすべて default です。
 
@@ -124,9 +125,9 @@ mode はすべて default です。
 
 afterAll で失敗した時に何故 test3 が再実行されるのかは分かりません。
 
-:::
+</details>
 
-# 終わりに
+# おわりに
 
 筆者はこの動きをよく理解しておらず、失敗するたびに `beforeAll` が実行されていることに気付いたときは驚きました。
 またある時は、 parallel 指定した afterAll の中で「リソースは既に削除されています」という旨のエラーが出ていたのにも悩まされましたが、調べてみると afterAll が何度も実行されていたからでした。
