@@ -113,8 +113,7 @@ parallel の親は parallel でなくてはなりません。
 
 場所を取るので折りたたみますが、 test 以外で落ちた場合の挙動も調べて見ました
 
-<details>
-<summary>beforeAll, afterAll, beforeEach, afterEach で失敗した時の挙動</summary>
+:::details beforeAll, afterAll, beforeEach, afterEach で失敗した時の挙動
 
 mode はすべて default です。
 
@@ -132,7 +131,7 @@ afterEach で失敗
 
 afterAll で失敗した時に何故 test3 が再実行されるのかは分かりません。
 
-</details>
+:::
 
 # おわりに
 
