@@ -33,24 +33,9 @@ test.describe('なんらかのテスト', () => {
 
 筆者は最近までこれらの挙動をよく理解しておらず勘で書いていましたが、理解不足ゆえの想定外の挙動が頻発したためちゃんと調べることにしました。
 
-# mode 無指定は default と同じではない
-
-まず本題に入る前に注意があります。
-mode を指定しない場合は明示的に default と同じ挙動になるかと思いきや、 fullyParallel を指定した時の挙動に違いがあります。
-
-| mode     | fullyParallel |                 |
-| :------- | :------------ | :-------------- |
-| 無指定   | false         | default の挙動  |
-| 無指定   | true          | parallel の挙動 |
-| default  | false / true  | default の挙動  |
-| serial   | false / true  | serial の挙動   |
-| parallel | false / true  | parallel の挙動 |
-
-fullyParallel を使う場合は気をつけましょう。fullyParallel は使わずに全て明示的に指定するのもアリだと思います。
-
 # default, serial, parallel の挙動
 
-では早速、各 mode の違いを見ていくのですが、まずは次の串団子を見てください。
+それでは早速、各 mode の違いを見ていきます。まずは次の串団子を見てください。
 
 ![凡例](/images/playwright-mode/legend.png)
 
@@ -95,6 +80,21 @@ worker を多くすれば、すべてのテストを並列に実行すること�
 `beforeAll` を一回だけ実行して、 `test` だけを並列に実行ということはできません。
 
 # その他の挙動
+
+## mode 無指定は default と同じではない
+
+まず本題に入る前に注意があります。
+mode を指定しない場合は明示的に default と同じ挙動になるかと思いきや、 fullyParallel を指定した時の挙動に違いがあります。
+
+| mode     | fullyParallel |                 |
+| :------- | :------------ | :-------------- |
+| 無指定   | false         | default の挙動  |
+| 無指定   | true          | parallel の挙動 |
+| default  | false / true  | default の挙動  |
+| serial   | false / true  | serial の挙動   |
+| parallel | false / true  | parallel の挙動 |
+
+fullyParallel を使う場合は気をつけましょう。fullyParallel は使わずに全て明示的に指定するのもアリだと思います。
 
 ## describe のネストの制約
 
