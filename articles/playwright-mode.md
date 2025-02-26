@@ -137,7 +137,7 @@ parallel の親は parallel でなくてはなりません。「一部分だけ�
 
 参考までに、ネストした時の挙動も調べてみました。
 
-:::details beforeAll, afterAll, beforeEach, afterEach で失敗した時の挙動
+:::describe をネストした時の挙動
 
 子の 2 つ目のテストが必ず失敗する想定です（編みかけの部分が 子の describe）。
 
