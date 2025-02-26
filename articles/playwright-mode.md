@@ -128,11 +128,11 @@ test3 が再実行されている理由はわかりません。
 
 describe はネストさせることができますが、複数の mode を混在させる時は組み合わせに制約があります。
 
-| parent \ child | default | serial | parallel |
-| :------------- | :------ | :----- | :------- |
-| default        | ok      | ok     | error    |
-| serial         | ok      | ok     | error    |
-| parallel       | ok      | ok     | ok       |
+| parent \ child | default | serial | parallel  |
+| :------------- | :------ | :----- | :-------- |
+| default        | ok      | ok     | **error** |
+| serial         | ok      | ok     | **error** |
+| parallel       | ok      | ok     | ok        |
 
 parallel の親は parallel でなくてはなりません。「一部分だけを並行に実行するのは無理」と覚えておきましょう。
 同様に、トップレベルに parallel とそれ以外の mode を混在させることもできません。
