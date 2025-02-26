@@ -32,8 +32,7 @@ test.describe('なんらかのテスト', () => {
 })
 ```
 
-表を見ればなんとなくわかりますが、リトライ時の挙動や beforeAll などの実行のされ方など細かいところがよく分かりません。
-そこで、徹底的にパターンを調べてそれぞれの挙動を図解してみました。
+表を見ればなんとなくわかりますが、リトライ時の挙動や beforeAll などの実行のされ方など細かいところがよく分かりません。そこで、それぞれのパターンの挙動を徹底的に調べて図解してみました。
 
 # default, serial, parallel の挙動
 
@@ -142,7 +141,7 @@ parallel の親は parallel でなくてはなりません。「一部分だけ�
 
 :::details beforeAll, afterAll, beforeEach, afterEach で失敗した時の挙動
 
-mode はすべて default です。
+子の 2 つ目のテストが必ず失敗する想定です（編みかけの部分が 子の describe）。
 
 ### 親: default, 子: default
 
@@ -160,6 +159,8 @@ mode はすべて default です。
 
 ![親: serial, 子: serial](/images/playwright-mode/nest-serial-serial.png)
 
+子は default ですが、親の serial の影響を受けているのでしょうか。
+
 ### 親: parallel, 子: default
 
 ![親: parallel, 子: default](/images/playwright-mode/nest-parallel-default.png)
@@ -172,9 +173,8 @@ mode はすべて default です。
 
 # おわりに
 
-分かってしまえばそんなに難しくないですね！もっと早くやればよかったと後悔しています。
+分かってしまえばそんなに難しくないですね！もっと早く調べればよかったと後悔しています。
 
-筆者は最初この動きをよく理解しておらず、２回目の実行で必ず落ちる `beforeAll` を書いていたりしました。
-またある時は、 parallel 指定した describe の `afterAll` で「リソースは既に削除されています」という旨のエラーが出ていたのにも悩まされましたが、調べてみると `afterAll` が何度も実行されていたからでした。
+筆者は最初この動きをよく理解しておらず、２回目の実行で必ず落ちる `beforeAll` を書いていたりしました。またある時は、 parallel 指定した describe の `afterAll` で「リソースは既に削除されています」という旨のエラーが出ていたのにも悩まされましたが、調べてみると `afterAll` が何度も実行されていたからでした。
 
 同じように想定外の挙動で困っている人のお役に立てれば幸いです！
