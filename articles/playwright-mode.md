@@ -54,6 +54,7 @@ test.describe('なんらかのテスト', () => {
 ![mode: default](/images/playwright-mode/mode-default.png)
 
 まずは default の挙動です。
+
 worker が 3 つ書かれていますが、並列実行されているわけではなく、上から順番に実行されています。
 
 失敗したテストが再実行されていますが、失敗した `test2` だけではなく `beforeAll` や `beforeEach` も実行されていることに注意が必要です。
@@ -64,10 +65,10 @@ worker が 3 つ書かれていますが、並列実行されているわけで�
 ![mode: serial](/images/playwright-mode/mode-serial.png)
 
 次に serial の挙動です。
-default とは違い、失敗したテストよりも後ろのテストは実行されません。
-また、テストが失敗すると、その前のテストから全てやり直しになります。
 
-serial では全てのテストが前のテストに依存している想定であることを考えると、納得の挙動ですね。
+default とは違い、失敗したテストよりも後ろのテストは実行されません。また、テストが失敗すると、その前のテストから全てやり直しになります。
+
+全てのテストが前のテストに依存している前提で考えると、納得の挙動ですね。
 
 ## parallel
 
@@ -75,16 +76,15 @@ serial では全てのテストが前のテストに依存している想定で�
 
 最後に parallel の挙動です。
 
-worker を多くすれば、すべてのテストを並列に実行することができます。
-ここでも `beforeAll` が並列実行の数だけ実行されていることに注意が必要です。
-`beforeAll` を一回だけ実行して、 `test` だけを並列に実行ということはできません。
+workers （同時実行可能な worker の数）を多くできる場合、すべてのテストを並列に実行することができます。workers が少ない場合、ひとつの worker が複数の test を実行することがあります。workers が 1 の場合は default と同じ挙動になります。
+
+また、ここでも `beforeAll` が worker の数だけ実行されていることに注意が必要です。`beforeAll` を最初に一回だけ実行して、 `test` だけを並列に実行ということはできません（hack は可能かもしれませんが）。
 
 # その他の挙動
 
 ## mode 無指定は default と同じではない
 
-まず本題に入る前に注意があります。
-mode を指定しない場合は明示的に default と同じ挙動になるかと思いきや、 fullyParallel を指定した時の挙動に違いがあります。
+mode を指定しない場合は明示的に default を指定した時と同じ挙動になるかと思いきや、 fullyParallel を指定した時の挙動に違いがあります。fullyParallel によって test が並列に変わるのは mode 無指定の場合のみです。
 
 | mode     | fullyParallel |                 |
 | :------- | :------------ | :-------------- |
@@ -94,24 +94,24 @@ mode を指定しない場合は明示的に default と同じ挙動になるか
 | serial   | false / true  | serial の挙動   |
 | parallel | false / true  | parallel の挙動 |
 
-fullyParallel を使う場合は気をつけましょう。fullyParallel は使わずに全て明示的に指定するのもアリだと思います。
+fullyParallel を使う場合は気をつけましょう。いっそのこと fullyParallel は使わずに全て明示的に指定するのもアリだと思います。
 
 ## describe のネストの制約
 
-describe はネストさせることができますが、複数の mode を混在させる時は制約があります。
+describe はネストさせることができますが、複数の mode を混在させる時は組み合わせに制約があります。
 
 | parent \ child | default | serial | parallel |
 | :------------- | :------ | :----- | :------- |
-| default        | ok      | ok     |          |
-| serial         | ok      | ok     |          |
+| default        | ok      | ok     | error    |
+| serial         | ok      | ok     | error    |
 | parallel       | ok      | ok     | ok       |
 
-parallel の親は parallel でなくてはなりません。
-「一部分だけを並行に実行するのは無理」と覚えておきましょう。
+parallel の親は parallel でなくてはなりません。「一部分だけを並行に実行するのは無理」と覚えておきましょう。
+同様に、トップレベルに parallel とそれ以外の mode を混在させることもできません。
 
 ## beforeAll, afterAll, beforeEach, afterEach で失敗した時の挙動
 
-場所を取るので折りたたみますが、 test 以外で落ちた場合の挙動も調べて見ました
+場所を取るので折りたたみますが、 test 以外で落ちた場合の挙動も調べてみました。
 
 :::details beforeAll, afterAll, beforeEach, afterEach で失敗した時の挙動
 
