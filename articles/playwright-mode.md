@@ -1,5 +1,5 @@
 ---
-title: Playwright の各 mode の挙動を正確に理解する
+title: Playwright の並列処理（mode）の挙動を正確に理解する
 emoji: "🍡"
 type: "tech"
 topics: ["Playwright"]
@@ -9,11 +9,12 @@ published: false
 
 こんにちは。ナレッジワークの [torii](https://twitter.com/jinjor) です。
 
-E2E テストでお世話になっている Playwright の挙動についてさくっと解説します！
+E2E テストでお世話になっている Playwright の挙動についてさくっと解説します。
+筆者は最近まで mode の挙動をよく理解しておらず勘で書いていましたが、理解不足ゆえの想定外の挙動が頻発したためちゃんと調べてまとめたのがこの記事の内容です。
 
-# わかりにくい mode の挙動
+# 3 種類の mode の挙動
 
-Playwright では `describe` がどのように動作するかを決める `mode` を指定することができます。
+Playwright では `describe` どのようなフローで動作するかを決める `mode` を指定することができます。
 
 | mode     |                         |
 | :------- | :---------------------- |
@@ -31,11 +32,12 @@ test.describe('なんらかのテスト', () => {
 })
 ```
 
-筆者は最近までこれらの挙動をよく理解しておらず勘で書いていましたが、理解不足ゆえの想定外の挙動が頻発したためちゃんと調べることにしました。
+表を見ればなんとなくわかりますが、リトライ時の挙動や beforeAll などの実行のされ方など細かいところがよく分かりません。
+そこで、徹底的にパターンを調べてそれぞれの挙動を図解してみました。
 
 # default, serial, parallel の挙動
 
-それでは早速、各 mode の違いを見ていきます。まずは次の串団子を見てください。
+まずは次の串団子（凡例）を見てください。
 
 ![凡例](/images/playwright-mode/legend.png)
 
@@ -43,7 +45,7 @@ test.describe('なんらかのテスト', () => {
 
 以降の説明では、次の前提で 3 つの mode の挙動の違いを見ていきます。
 
-前提:
+**[前提]**
 
 - 3 つのテストを実行する
 - 2 つ目のテストが必ず失敗する
@@ -55,10 +57,9 @@ test.describe('なんらかのテスト', () => {
 
 まずは default の挙動です。
 
-worker が 3 つ書かれていますが、並列実行されているわけではなく、上から順番に実行されています。
+worker が 3 つ書かれていますが、並列実行されているわけではなく、上から順番に実行されています。また、テストが失敗すると、失敗した `test2` から再実行されます。
 
-失敗したテストが再実行されていますが、失敗した `test2` だけではなく `beforeAll` や `beforeEach` も実行されていることに注意が必要です。
-`beforeAll` で環境をセットアップすることを想定していると、これは意外な挙動かもしれません。
+ここで、失敗した `test2` だけではなく `beforeAll` や `beforeEach` も実行されていることに注意が必要です。`beforeAll` が１回のみの全体でテスト環境をセットアップしていると、思わぬ競合が発生します。
 
 ## serial
 
@@ -66,9 +67,9 @@ worker が 3 つ書かれていますが、並列実行されているわけで�
 
 次に serial の挙動です。
 
-default とは違い、失敗したテストよりも後ろのテストは実行されません。また、テストが失敗すると、その前のテストから全てやり直しになります。
+default とは違い、テストが失敗すると最初のテストから全てやり直しになります。また、リトライしても最後まで失敗した場合、それ移行のテストは実行されません。
 
-全てのテストが前のテストに依存している前提で考えると、納得の挙動ですね。
+全てのテストが前のテストに依存している前提なので納得の挙動ではありますが、多少おかしくても手っ取り早く全てのテストを実行してほしい時は default の方が良さそうです。
 
 ## parallel
 
@@ -78,7 +79,7 @@ default とは違い、失敗したテストよりも後ろのテストは実行
 
 workers （同時実行可能な worker の数）を多くできる場合、すべてのテストを並列に実行することができます。workers が少ない場合、ひとつの worker が複数の test を実行することがあります。workers が 1 の場合は default と同じ挙動になります。
 
-また、ここでも `beforeAll` が worker の数だけ実行されていることに注意が必要です。`beforeAll` を最初に一回だけ実行して、 `test` だけを並列に実行ということはできません（hack は可能かもしれませんが）。
+また、`beforeAll` は worker の数だけ実行されるので、 `beforeAll` を１回実行した後に `test` だけを並列に実行ということはできないようです（hack は可能かもしれませんが）。
 
 # その他の挙動
 
@@ -96,19 +97,6 @@ mode を指定しない場合は明示的に default を指定した時と同じ
 
 fullyParallel を使う場合は気をつけましょう。いっそのこと fullyParallel は使わずに全て明示的に指定するのもアリだと思います。
 
-## describe のネストの制約
-
-describe はネストさせることができますが、複数の mode を混在させる時は組み合わせに制約があります。
-
-| parent \ child | default | serial | parallel |
-| :------------- | :------ | :----- | :------- |
-| default        | ok      | ok     | error    |
-| serial         | ok      | ok     | error    |
-| parallel       | ok      | ok     | ok       |
-
-parallel の親は parallel でなくてはなりません。「一部分だけを並行に実行するのは無理」と覚えておきましょう。
-同様に、トップレベルに parallel とそれ以外の mode を混在させることもできません。
-
 ## beforeAll, afterAll, beforeEach, afterEach で失敗した時の挙動
 
 場所を取るので折りたたみますが、 test 以外で落ちた場合の挙動も調べてみました。
@@ -125,7 +113,7 @@ mode はすべて default です。
 
 ![fail at afterAll](/images/playwright-mode/fail-after-all.png)
 
-何故 test3 が再実行されるのかは分かりません。
+test3 が再実行されている理由はわかりません。
 
 ### beforeEach で失敗
 
@@ -137,10 +125,56 @@ mode はすべて default です。
 
 :::
 
+## describe をネストした時の挙動
+
+describe はネストさせることができますが、複数の mode を混在させる時は組み合わせに制約があります。
+
+| parent \ child | default | serial | parallel |
+| :------------- | :------ | :----- | :------- |
+| default        | ok      | ok     | error    |
+| serial         | ok      | ok     | error    |
+| parallel       | ok      | ok     | ok       |
+
+parallel の親は parallel でなくてはなりません。「一部分だけを並行に実行するのは無理」と覚えておきましょう。
+同様に、トップレベルに parallel とそれ以外の mode を混在させることもできません。
+
+参考までに、ネストした時の挙動も調べてみました。
+
+:::details beforeAll, afterAll, beforeEach, afterEach で失敗した時の挙動
+
+mode はすべて default です。
+
+### 親: default, 子: default
+
+![親: default, 子: default](/images/playwright-mode/nest-default-default.png)
+
+### 親: default, 子: serial
+
+![親: default, 子: serial](/images/playwright-mode/nest-default-serial.png)
+
+### 親: serial, 子: default
+
+![親: serial, 子: default](/images/playwright-mode/nest-serial-default.png)
+
+### 親: serial, 子: serial
+
+![親: serial, 子: serial](/images/playwright-mode/nest-serial-serial.png)
+
+### 親: parallel, 子: default
+
+![親: parallel, 子: default](/images/playwright-mode/nest-parallel-default.png)
+
+### 親: parallel, 子: serial
+
+![親: parallel, 子: serial](/images/playwright-mode/nest-parallel-serial.png)
+
+:::
+
 # おわりに
 
-筆者はこの動きをよく理解しておらず、失敗するたびに `beforeAll` が実行されていることに気付いたときは驚きました。
-またある時は、 parallel 指定した afterAll の中で「リソースは既に削除されています」という旨のエラーが出ていたのにも悩まされましたが、調べてみると afterAll が何度も実行されていたからでした。
+分かってしまえばそんなに難しくないですね！もっと早くやればよかったと後悔しています。
 
-そして、 Playwright のドキュメントを読んでもなかなか理解できず、手当たり次第に実験を繰り返してようやく理解できました。
-分かってしまえばそんなに難しくないですね！（もっと早くやればよかったと後悔しています）
+筆者は最初この動きをよく理解しておらず、２回目の実行で必ず落ちる `beforeAll` を書いていたりしました。
+またある時は、 parallel 指定した describe の `afterAll` で「リソースは既に削除されています」という旨のエラーが出ていたのにも悩まされましたが、調べてみると `afterAll` が何度も実行されていたからでした。
+
+同じように想定外の挙動で困っている人のお役に立てれば幸いです！
