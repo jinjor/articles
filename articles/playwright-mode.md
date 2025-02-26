@@ -7,7 +7,7 @@ publication_name: knowledgework
 published: false
 ---
 
-こんにちは。ナレッジワークの [torii](https://twitter.com/jinjor) です。
+こんにちは。ナレッジワークの [torii](https://twitter.com/jinjor) です！
 
 E2E テストでお世話になっている Playwright の挙動についてさくっと解説します。
 筆者は最近まで mode の挙動をよく理解しておらず勘で書いていましたが、理解不足ゆえの想定外の挙動が頻発したためちゃんと調べてまとめたのがこの記事の内容です。
