@@ -155,11 +155,11 @@ parallel の親は parallel でなくてはなりません。「一部分だけ�
 
 ![親: serial, 子: default](/images/playwright-mode/nest-serial-default.png)
 
+子は default ですが、親の serial の影響を受けているのでしょうか。
+
 #### 親: serial, 子: serial
 
 ![親: serial, 子: serial](/images/playwright-mode/nest-serial-serial.png)
-
-子は default ですが、親の serial の影響を受けているのでしょうか。
 
 #### 親: parallel, 子: default
 
