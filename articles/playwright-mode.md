@@ -9,7 +9,7 @@ published: false
 
 こんにちは。ナレッジワークの [torii](https://twitter.com/jinjor) です！
 
-E2E テストでお世話になっている Playwright の挙動についてさくっと解説します。筆者は最近まで mode の挙動をよく理解しておらず勘で書いていましたが、理解不足ゆえの想定外の挙動が頻発したためちゃんと調べてみました。
+E2E テストでお世話になっている [Playwright](https://playwright.dev/) の挙動についてさくっと解説します。筆者は最近まで[並列処理](https://playwright.dev/docs/test-parallel)や mode の挙動をよく理解しておらず勘で書いていましたが、理解不足ゆえの想定外の挙動が頻発したためちゃんと調べてみました。
 
 # 3 種類の mode の挙動
 
@@ -83,7 +83,7 @@ workers （同時実行可能な worker の数）を多くできる場合、す�
 
 ## mode 無指定は default と同じではない
 
-mode を指定しない場合は明示的に default を指定した時と同じ挙動になるかと思いきや、 fullyParallel を指定した時の挙動に違いがあります。fullyParallel によって test が並列に変わるのは mode 無指定の場合のみです。
+mode を指定しない場合は明示的に default を指定した時と同じ挙動になるかと思いきや、 playwright.config.ts で [fullyParallel](https://playwright.dev/docs/api/class-testconfig#test-config-fully-parallel) を指定した時の挙動に違いがあります。fullyParallel によって test が並列に変わるのは mode 無指定の場合のみです。
 
 | mode     | fullyParallel |                 |
 | :------- | :------------ | :-------------- |
@@ -173,6 +173,4 @@ parallel の親は parallel でなくてはなりません。「一部分だけ�
 
 分かってしまえばそんなに難しくないですね！もっと早く調べればよかったと後悔しています。
 
-筆者は最初この動きをよく理解しておらず、２回目の実行で必ず落ちる `beforeAll` を書いていたりしました。またある時は、 parallel 指定した describe の `afterAll` で「リソースは既に削除されています」という旨のエラーが出ていたのにも悩まされましたが、調べてみると `afterAll` が何度も実行されていたからでした。
-
-同じように想定外の挙動で困っている人のお役に立てれば幸いです。
+筆者は最初この動きをよく理解しておらず、２回目の実行で必ず落ちる `beforeAll` や parallel で実行すると必ずエラー出る `afterAll` を書いたりしていました。同じように想定外の挙動で困っている人のお役に立てれば幸いです。
