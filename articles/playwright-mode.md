@@ -141,7 +141,7 @@ parallel の親は parallel でなくてはなりません。「一部分だけ�
 
 :::details describe をネストした時の挙動
 
-子の 2 つ目のテストが必ず失敗する想定です（編みかけの部分が 子の describe）。
+子の 2 つ目のテストが必ず失敗する想定です（網掛けの部分が 子の describe）。
 
 #### 親: default, 子: default
 
