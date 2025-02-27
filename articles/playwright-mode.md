@@ -9,11 +9,13 @@ published: false
 
 こんにちは。ナレッジワークの [torii](https://twitter.com/jinjor) です！
 
-E2E テストでお世話になっている [Playwright](https://playwright.dev/) の挙動についてさくっと解説します。筆者は最近まで[並列処理](https://playwright.dev/docs/test-parallel)や mode の挙動をよく理解しておらず勘で書いていましたが、理解不足ゆえの想定外の挙動が頻発したためちゃんと調べてみました。
+E2E テストでお世話になっている [Playwright](https://playwright.dev/) の挙動についてさくっと解説します。筆者は最近まで並列処理や mode の挙動をよく理解しておらず勘で書いていましたが、理解不足ゆえの想定外の挙動が頻発したためちゃんと調べてみました。
 
 # 3 種類の mode の挙動
 
 Playwright では `describe` どのようなフローで動作するかを決める `mode` を指定することができます。
+
+https://playwright.dev/docs/test-parallel
 
 | mode     |                         |
 | :------- | :---------------------- |
@@ -31,7 +33,7 @@ test.describe('なんらかのテスト', () => {
 })
 ```
 
-表を見ればなんとなくわかりますが、リトライ時の挙動や beforeAll などの実行のされ方など細かいところがよく分かりません。そこで、それぞれのパターンの挙動を徹底的に調べて図解してみました。
+ドキュメントの説明を読めばなんとなくわかりますが、リトライ時の挙動や beforeAll などの実行のされ方など細かいところがよく分かりません。そこで、それぞれのパターンの挙動を徹底的に調べて図解してみました。
 
 # default, serial, parallel の挙動
 
