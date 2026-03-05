@@ -23,6 +23,8 @@ published: false
 - 長い文字列が来ても適切に表示できるか（パターンが多く判定方法を指示しにくい）
 - Figma のデザイン通りに実装できているか（仕組みの整備が追いついていない）
 
+![PR に投稿されたチェックリストの例](/images/claude-code-action-issue-prompt/checklist.png)
+
 チェックリストを投稿するためにわざわざ Claude Code を使っているのは、以下のような理由からです。
 
 - PR の内容に応じてピンポイントでチェック項目を出したい（関係ない項目が大量に出るとそのうち見なくなる）
@@ -35,7 +37,6 @@ published: false
 ここからが本題なのですが、ここでの工夫として **Issue の description に書いたプロンプトを CI から読んで使う**ことにしました。
 
 ![Issue の description にプロンプトを記述した例](/images/claude-code-action-issue-prompt/issue-prompt.png)
-![PR に投稿されたチェックリストの例](/images/claude-code-action-issue-prompt/checklist.png)
 
 このようにしたメリットはいくつかあります。
 
