@@ -10,7 +10,7 @@ published: false
 こんにちは。ナレッジワークの [torii](https://twitter.com/jinjor) です。
 Claude Code で実装して PR を出すまでのワークフローで個人的に工夫したことを紹介します。
 
-## 問題：AI レビューが非同期で来るのが面倒
+## 問題：PR 後の AI レビュー対応にかかるコスト
 
 Claude Code に実装を任せて PR を出すと、GitHub Copilot からレビューが来ます。このレビュー自体の質は高くて、本当に危ないバグを見つけてくれることもあります。
 
