@@ -1,5 +1,5 @@
 ---
-title: Claude Code で実装したコードを別のエージェントにレビューさせてから PR を出す
+title: Claude Code で PR 前に別エージェントのコードレビューを受ける
 emoji: "🔍"
 type: "tech"
 topics: ["Claude Code", "コードレビュー"]
