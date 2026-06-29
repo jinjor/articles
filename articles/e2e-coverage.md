@@ -8,7 +8,7 @@ published: false
 ---
 
 こんにちは。ナレッジワークの [torii](https://twitter.com/jinjor) です。
-Playwright による E2E テストに新しいカバレッジ指標「ページ網羅率」と「RPC 網羅率」を導入したので紹介します！
+Playwright で実施している E2E テストに新しいカバレッジ指標「ページ網羅率」と「RPC 網羅率」を導入したので紹介します！
 
 ## 背景: 手動によるカバレッジ管理の信頼性低下
 
